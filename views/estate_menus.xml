@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="estate_menu_root" name="Real Estate">
+        <menuitem id="advertisements" name="Advertisements">
+            <menuitem id="estate_property_menu_action" action="estate_property_action" />
+        </menuitem>
+        <!-- <menuitem id="sales" name="Sales">
+            <menuitem id="sales_my_pipeline_menu_action" action="sales_my_pipeline_action" />
+            <menuitem id="sales_my_activities_menu_action" action="sales_my_activities_action" />
+            <menuitem id="sales_my_quotations_menu_action" action="sales_my_quotations_action" />
+            <menuitem id="sales_teams_menu_action" action="sales_teams_action" />
+            <menuitem id="sales_customers_menu_action" action="sales_customers_action" />
+        </menuitem>
+        <menuitem id="leads" name="Leads">
+            <menuitem id="estate_leads_menu_action" action="leads_action" />
+        </menuitem>
+        <menuitem id="configuration" name="Configurations">
+            <menuitem id="estate_configuration_menu_action" action="configurations_action" />
+        </menuitem> -->
+        <menuitem id="settings" name="Settings">
+            <menuitem id="estate_type_settings_menu_action" action="estate_type_settings_action" />
+            <menuitem id="estate_tag_settings_menu_action" action="estate_tag_settings_action" />
+        </menuitem>
+    </menuitem>
+</odoo>
