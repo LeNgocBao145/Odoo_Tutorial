@@ -70,6 +70,10 @@
         <field name="arch" type="xml">
             <form string="Estate Property Form">
                 <sheet>
+                    <header>
+                        <button type="object" name="action_sold" string="Sold" class="oe_highlight"/>
+                        <button type="object" name="action_cancel" string="Cancel" class="oe_highlight"/>
+                    </header>
                     <group>
                         <field name="name" style="font-size:50px; font-weight:bold; color:black;"
                             nolabel="1" />
@@ -77,6 +81,7 @@
                     <field name="tag_ids" widget="many2many_tags" />
                     <group>
                         <group>
+                            <field name="Status" />
                             <field name="property_type_id" />
                             <field name="postcode" />
                             <field name="date_availability" />
@@ -98,7 +103,6 @@
                                 <field name="garden" />
                                 <field name="garden_area" />
                                 <field name="garden_orientation" />
-                                <field name="Status" />
                                 <field name="total_area" />
                             </group>
                         </page>
@@ -109,6 +113,8 @@
                                     <field name="partner_id" />
                                     <field name="validity" />
                                     <field name="date_deadline" />
+                                    <button name="action_accept" states="draft" type="object" icon="fa-check"/>
+                                    <button name="action_refuse" states="draft,open" type="object" icon="fa-times"/>
                                     <field name="status" />
                                 </list>
                             </field>
