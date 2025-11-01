@@ -17,6 +17,12 @@ class EstateProperty(models.Model):
 
     selling_price = fields.Float(readonly=True, copy=False)
 
+    @api.constrains('selling_price', 'expected_price')
+    def _check_selling_price(self):
+        for record in self:
+            if record.selling_price < (record.expected_price * 0.9):
+                raise exceptions.ValidationError("The selling price cannot be lower than 90% of the expected price.")
+
     bedrooms = fields.Integer(default=2)
 
     living_area = fields.Integer(string ='Living Area (sqm)')
@@ -100,7 +106,7 @@ class EstateProperty(models.Model):
                 raise exceptions.UserError("Canceled properties cannot be sold.")
             if record.Status != 'canceled':
                 record.Status = 'sold'
-            
+
 
     def action_cancel(self):
         for record in self:
