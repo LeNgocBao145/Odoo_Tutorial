@@ -3,7 +3,8 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'search_default_available': 1}</field>
     </record>
 
     <!-- <record id="sales_my_pipeline_action" model="ir.actions.act_window">
@@ -52,15 +53,52 @@
         <field name="name">Lists</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list string="Tests">
+            <list string="Tests" editable="bottom" 
+            decoration-bf="Status == 'offer_accepted'" 
+            decoration-success="Status in ('offer_accepted', 'offer_received')"
+            decoration-muted="Status == 'sold'">
                 <field name="name" />
+                <field name="Status" />
                 <field name="postcode" />
                 <field name="bedrooms" />
                 <field name="living_area" />
                 <field name="expected_price" />
                 <field name="selling_price" />
-                <field name="date_availability" />
+                <field name="date_availability" optional="hide"/>
             </list>
+        </field>
+    </record>
+
+    // Add the following fields to the Kanban view: expected price, 
+    // best price, selling price and tags. Pay attention: the best 
+    // price is only displayed when an offer is received, while the 
+    // selling price is only displayed when an offer is accepted.
+    <record id="view_estate_property_kanban" model="ir.ui.view">
+        <field name="name">Kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by='property_type_id' records_draggable='False' groups_draggable='False'>
+                <templates>
+                    <field name="Status" />
+                    <t t-name="kanban-box">
+                        <div>
+                            <div>
+                                <field name="name" />
+                            </div>
+                            <field name="expected_price" />
+                            <div t-if="record.Status.raw_value == 'offer_received'">
+                                Best Price: <field name="best_price" />
+                            </div>
+                            <div t-if="record.Status.raw_value == 'offer_accepted'">
+                                Selling price: <field name="selling_price" />
+                            </div>
+                            <div>
+                                <field name="tag_ids" />
+                            </div>
+                        </div>
+                    </t>
+                </templates>  
+            </kanban>
         </field>
     </record>
 
@@ -71,18 +109,21 @@
             <form string="Estate Property Form">
                 <sheet>
                     <header>
-                        <button type="object" name="action_sold" string="Sold" class="oe_highlight"/>
-                        <button type="object" name="action_cancel" string="Cancel" class="oe_highlight"/>
+                        <group invisible="Status in ('sold', 'canceled')">
+                            <button type="object" name="action_sold" string="Sold" class="oe_highlight"/>
+                            <button type="object" name="action_cancel" string="Cancel"
+                                class="oe_highlight"/>
+                        </group>
+                        <field name="Status" widget="statusbar"/>
                     </header>
                     <group>
                         <field name="name" style="font-size:50px; font-weight:bold; color:black;"
                             nolabel="1" />
                     </group>
-                    <field name="tag_ids" widget="many2many_tags" />
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <group>
                         <group>
-                            <field name="Status" />
-                            <field name="property_type_id" />
+                            <field name="property_type_id" options="{'no_create': true, 'no_open':true}"/>
                             <field name="postcode" />
                             <field name="date_availability" />
                         </group>
@@ -101,21 +142,25 @@
                                 <field name="facades" />
                                 <field name="garage" />
                                 <field name="garden" />
-                                <field name="garden_area" />
-                                <field name="garden_orientation" />
+                                <field name="garden_area" invisible="garden == False"/>
+                                <field name="garden_orientation" invisible="garden == False"/>
                                 <field name="total_area" />
                             </group>
                         </page>
                         <page string="Offers">
-                            <field name="offer_ids">
-                                <list string="Offers">
+                            <field name="offer_ids" readonly="Status in ('sold', 'canceled', 'offer_accepted')">
+                                <list string="Offers" editable="bottom" 
+                                decoration-success="status == 'accepted'" 
+                                decoration-danger="status == 'refused'">
                                     <field name="price" />
                                     <field name="partner_id" />
                                     <field name="validity" />
                                     <field name="date_deadline" />
-                                    <button name="action_accept" states="draft" type="object" icon="fa-check"/>
-                                    <button name="action_refuse" states="draft,open" type="object" icon="fa-times"/>
-                                    <field name="status" />
+                                    <button name="action_accept" states="draft" type="object"
+                                        icon="fa-check" invisible="status"/>
+                                    <button name="action_refuse" states="draft,open" type="object"
+                                        icon="fa-times" invisible="status"/>
+                                    <!-- <field name="status" /> -->
                                 </list>
                             </field>
                         </page>
@@ -140,10 +185,10 @@
                 <field name="postcode" />
                 <field name="expected_price" />
                 <field name="bedrooms" />
-                <field name="living_area" />
+                <field name="living_area" filter_domain="[('living_area', '>=', self)]"/>
                 <field name="facades" />
                 <filter string="Available" name="available"
-                    domain="[('Status','in', ['new','offer_received'])]" />
+                    domain="[('Status','in', ['new','offer_received'])]"/>
                 <group expand="1" string="Group By">
                     <filter string="Postcode" name="postcode"
                         context="{'group_by':'postcode'}" />

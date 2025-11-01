@@ -2,8 +2,10 @@ from odoo import fields, models
 
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
-    _description = "Estate Property Type"
+    _description = "Estate Property Type"    
+    _order = "sequence, name"
 
+    sequence = fields.Integer('Sequence', default=1)
     name = fields.Char(required=True, string="Type")
 
     _sql_constraints = [

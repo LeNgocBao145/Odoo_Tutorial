@@ -4,6 +4,7 @@ from datetime import timedelta
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Estate property offer"
+    _order = "price desc"
 
     price = fields.Float()
 
@@ -52,4 +53,6 @@ class EstatePropertyOffer(models.Model):
     def action_refuse(self):
         for record in self: 
             record.status = 'refused'
+            record.property_id.selling_price = 0
+            record.property_id.buyer_id = False
     

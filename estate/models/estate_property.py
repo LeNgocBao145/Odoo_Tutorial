@@ -1,9 +1,11 @@
 from odoo import fields, models, api, exceptions
+import odoo.tools.float_utils as float_utils
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate property"
+    _order = "id desc"
 
     name = fields.Char(required=True, string="Title")
 
@@ -20,8 +22,10 @@ class EstateProperty(models.Model):
     @api.constrains('selling_price', 'expected_price')
     def _check_selling_price(self):
         for record in self:
-            if record.selling_price < (record.expected_price * 0.9):
-                raise exceptions.ValidationError("The selling price cannot be lower than 90% of the expected price.")
+            if record.Status == 'offer_received':
+                if record.selling_price < (record.expected_price * 0.9):
+                    raise exceptions.ValidationError("The selling price cannot be lower than 90% of the expected price.")
+                
 
     bedrooms = fields.Integer(default=2)
 
