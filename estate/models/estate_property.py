@@ -115,3 +115,9 @@ class EstateProperty(models.Model):
     def action_cancel(self):
         for record in self:
             record.Status = 'canceled'
+
+    @api.ondelete(at_uninstall=True)
+    def _unlink_if_status_new_or_canceled(self):
+        for record in self:
+            if record.Status == 'new' or record.Status == 'canceled':
+                raise exceptions.UserError("Can't delete an new or canceled property!")

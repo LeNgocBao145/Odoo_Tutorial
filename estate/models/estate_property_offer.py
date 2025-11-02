@@ -26,6 +26,18 @@ class EstatePropertyOffer(models.Model):
         ('check_price_positive', 'CHECK(price > 0)', 'The offer price must be strictly positive!'),
     ]
 
+    @api.model
+    def create(self, vals):
+        property_obj = self.env['estate.property'].browse(vals.get('property_id'))
+
+        existing_max = max(property_obj.offer_ids.mapped('price')) if property_obj.offer_ids else 0
+        if vals.get('price', 0) < existing_max:
+            raise exceptions.ValidationError("Offer cannot be lower than an existing offer (%.2f)" % existing_max)
+
+        record = super().create(vals)
+
+        return record
+
     @api.depends('validity', 'create_date')
     def _compute_date_deadline(self):
         for record in self:
@@ -56,4 +68,6 @@ class EstatePropertyOffer(models.Model):
             record.status = 'refused'
             record.property_id.selling_price = 0
             record.property_id.buyer_id = False
+
+    
     
