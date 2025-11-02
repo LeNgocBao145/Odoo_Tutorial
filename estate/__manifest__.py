@@ -14,6 +14,8 @@
         'views/estate_property_type_views.xml',
         'views/estate_property_tag_views.xml',
         'views/estate_property_views.xml',
+        'reports/estate_property_reports.xml',
+        'reports/estate_property_reports_templates.xml',
         'views/estate_menus.xml',
     ],
     'installable': True,
