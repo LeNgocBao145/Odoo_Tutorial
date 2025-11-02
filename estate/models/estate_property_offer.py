@@ -7,6 +7,7 @@ class EstatePropertyOffer(models.Model):
     _order = "price desc"
 
     price = fields.Float()
+    property_type_id = fields.Many2one(related="property_id.property_type_id", store=True)
 
     status = fields.Selection([
         ('accepted', 'Accepted'),

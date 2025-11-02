@@ -12,6 +12,12 @@
         <field name="arch" type="xml">
             <form string="Estate Property Form">
                 <sheet>
+                    <div class="oe_right">
+                        <button name="action_view_offers" type="object"
+                            string="Offers" class="oe_stat_button" icon="fa-usd">
+                            <field name="offer_count" /> Offers
+                        </button>
+                    </div>
                     <group>
                         <field name="name" style="font-size:50px; font-weight:bold; color:black;"
                             nolabel="1" />
@@ -26,7 +32,7 @@
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <list string="Property Types" editable="bottom">
-                <field name="sequence" widget="handle"/>
+                <field name="sequence" widget="handle" />
                 <field name="name" />
             </list>
         </field>
