@@ -17,6 +17,7 @@
         'reports/estate_property_reports.xml',
         'reports/estate_property_reports_templates.xml',
         'reports/inherit_estate_property_reports_templates.xml',
+        'reports/estate_property_reports_subtemplates.xml',
         'views/estate_menus.xml',
     ],
     'installable': True,
