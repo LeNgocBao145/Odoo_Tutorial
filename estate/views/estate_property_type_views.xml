@@ -13,15 +13,25 @@
             <form string="Estate Property Form">
                 <sheet>
                     <div class="oe_right">
-                        <button name="action_view_offers" type="object"
+                        <button name="%(estate.estate_offer_settings_action)d" type="action"
                             string="Offers" class="oe_stat_button" icon="fa-usd">
-                            <field name="offer_count" /> Offers
-                        </button>
+                            <field name="offer_count" /> Offers </button>
                     </div>
                     <group>
                         <field name="name" style="font-size:50px; font-weight:bold; color:black;"
                             nolabel="1" />
                     </group>
+                    <notebook>
+                        <page string="Properties">
+                            <field name="property_ids" readonly="True">
+                                <list>
+                                    <field name="name" />
+                                    <field name="expected_price" />
+                                    <field name="Status" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
